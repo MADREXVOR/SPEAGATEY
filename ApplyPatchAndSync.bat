@@ -1,105 +1,84 @@
 @echo off
 setlocal
 
-REM === PATHS ===
-REM Folder where this .bat lives (your private ghost_dispatcher repo)
-set BASE_DIR=%~dp0
-set PRIVATE_DIR=%BASE_DIR%
-
-REM Public mirror repo (SPEAGATEY clone)
-set PUBLIC_DIR=C:\SPEAGATEY
-
-REM Optional patch zip from ChatGPT (already downloaded)
-set PATCH_ZIP=patch_dashboard_profit.zip
+REM === CONFIG ===
+set "PRIVATE_DIR=C:\ghost_dispatcher\ghost_dispatcher"
+set "PUBLIC_DIR=C:\SPEAGATEY"
+set "PATCH_NAME=patch_dashboard_profit.zip"
+set "PATCH_PATH=%PRIVATE_DIR%\patches\%PATCH_NAME%"
 
 echo.
 echo === Ghost Dispatcher: Apply patch (if present) + sync public mirror ===
 echo Private dir : %PRIVATE_DIR%
 echo Public dir  : %PUBLIC_DIR%
-echo Patch zip   : %PATCH_ZIP%
+echo Patch zip   : %PATCH_NAME%
 echo.
 
-REM -----------------------------------------------------------------
-REM 1) Apply zip patch into PRIVATE repo (ONLY if the zip exists)
-REM -----------------------------------------------------------------
-if exist "%PRIVATE_DIR%%PATCH_ZIP%" (
-    echo [1/4] Found %PATCH_ZIP%, applying patch...
-    powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -Path '%PRIVATE_DIR%%PATCH_ZIP%' -DestinationPath '%PRIVATE_DIR%' -Force"
-
-    if errorlevel 1 (
-        echo [ERROR] Expand-Archive failed. Patch not applied.
-        pause
-        goto :eof
-    )
-
-    del "%PRIVATE_DIR%%PATCH_ZIP%" >nul 2>&1
-    echo [OK] Patch applied to private repo and zip removed.
+REM ---------------------------------------------------------
+REM [1/3] APPLY PATCH ZIP IF IT EXISTS
+REM ---------------------------------------------------------
+if exist "%PATCH_PATH%" (
+    echo [1/3] Found patch zip: %PATCH_PATH%
+    echo        Applying patch into private repo...
+    pushd "%PRIVATE_DIR%"
+    powershell -NoLogo -NoProfile -Command "Expand-Archive -Path 'patches\\%PATCH_NAME%' -DestinationPath '.' -Force"
+    echo        Deleting patch zip after apply...
+    del "%PATCH_PATH%"
+    popd
 ) else (
-    echo [1/4] No patch zip found, skipping patch step.
+    echo [1/3] No patch zip found, skipping patch step.
 )
 
-REM -----------------------------------------------------------------
-REM 2) Mirror PRIVATE -> PUBLIC (code only, no secrets)
-REM -----------------------------------------------------------------
+REM ---------------------------------------------------------
+REM [2/3] ROBOCOPY PRIVATE -> PUBLIC (NO SECRETS / NO PATCHES)
+REM ---------------------------------------------------------
 echo.
-echo [2/4] Syncing PRIVATE -> PUBLIC (SPEAGATEY)...
+echo [2/3] Syncing files from PRIVATE to PUBLIC with robocopy...
+echo.
 
 if not exist "%PUBLIC_DIR%" (
-    echo Public dir does not exist, creating: %PUBLIC_DIR%
+    echo        Public dir does not exist. Creating: %PUBLIC_DIR%
     mkdir "%PUBLIC_DIR%"
 )
 
+robocopy "%PRIVATE_DIR%" "%PUBLIC_DIR%" /MIR ^
+    /XD .git .venv __pycache__ .idea .vscode patches ^
+    /XF .env secrets.json config_private.py api_keys.json
 
-robocopy "C:\ghost_dispatcher\ghost_dispatcher" "C:\SPEAGATEY" /MIR /XD .git .venv __pycache__ .idea .vscode patches /XF .env secrets.json config_private.py api_keys.json
- config_private.py api_keys.json
-
-if errorlevel 8 (
-    echo [ERROR] Robocopy failed (code %ERRORLEVEL%).
-    pause
-    goto :eof
-)
-
-echo [OK] Files synced to public mirror.
+echo.
+echo Robocopy finished with errorlevel %ERRORLEVEL%.
+echo (Non-zero here is usually fine unless it prints a hard error above.)
 echo.
 
-REM -----------------------------------------------------------------
-REM 3) Git add/commit/push from PUBLIC repo
-REM -----------------------------------------------------------------
-echo [3/4] Committing and pushing PUBLIC mirror...
+REM ---------------------------------------------------------
+REM [3/3] GIT COMMIT & PUSH IN PUBLIC MIRROR
+REM ---------------------------------------------------------
+echo [3/3] Committing and pushing PUBLIC mirror...
+echo.
 
-cd /d "%PUBLIC_DIR%"
+pushd "%PUBLIC_DIR%"
 
-REM Make sure this really is a git repo
 git rev-parse --is-inside-work-tree >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] %PUBLIC_DIR% is not a git repo.
-    echo Run this once in C:\:
-    echo   git clone https://github.com/MADREXVOR/SPEAGATEY.git SPEAGATEY
-    pause
-    goto :eof
+    echo [ERROR] %PUBLIC_DIR% is not a git repo. Init it and add remote to SPEAGATEY first.
+    popd
+    goto :EOF
 )
 
 git add .
 
-set MSG=Sync from ApplyPatchAndSync
-git commit -m "%MSG%"
+git commit -m "Sync from private at %DATE% %TIME%"
 if errorlevel 1 (
-    echo No new changes to commit (probably already in sync).
+    echo    Nothing new to commit (working tree clean).
 ) else (
-    echo [OK] Commit created: %MSG%
-    git push
-    if errorlevel 1 (
-        echo [WARN] git push failed, check error above.
-    ) else (
-        echo [OK] Pushed to remote SPEAGATEY.
-    )
+    echo    Commit created. Pushing to origin/main...
+    git push -u origin main
 )
 
-echo.
-echo [4/4] Done.
-echo - If a patch zip was present, it was applied and deleted.
-echo - Public mirror is synced and (if needed) pushed.
-echo.
+popd
 
+echo.
+echo [DONE] Public mirror is synced (or already up to date).
+echo.
 endlocal
 pause
