@@ -1,0 +1,62 @@
+[
+  {
+    "id": "T1",
+    "name": "Rexis-01",
+    "current_city": "Baltimore, MD",
+    "lat": 39.2904,
+    "lng": -76.6122,
+    "capacity_weight": 45000,
+    "capacity_deck": 53,
+    "used_weight": 0,
+    "used_deck": 0,
+    "status": "broken"
+  },
+  {
+    "id": "T2",
+    "name": "Rexis-02",
+    "current_city": "Nashville, TN",
+    "lat": 36.1627,
+    "lng": -86.7816,
+    "capacity_weight": 45000,
+    "capacity_deck": 53,
+    "used_weight": 0,
+    "used_deck": 0,
+    "status": "working"
+  },
+  {
+    "id": "T3",
+    "name": "Rexis-03",
+    "current_city": "Dallas, TX",
+    "lat": 32.7767,
+    "lng": -96.797,
+    "capacity_weight": 45000,
+    "capacity_deck": 53,
+    "used_weight": 0,
+    "used_deck": 0,
+    "status": "working"
+  },
+  {
+    "id": "T4",
+    "name": "Rexis-04",
+    "current_city": "Atlanta, GA",
+    "lat": 33.749,
+    "lng": -84.388,
+    "capacity_weight": 45000,
+    "capacity_deck": 53,
+    "used_weight": 20000,
+    "used_deck": 30,
+    "status": "working"
+  },
+  {
+    "id": "T5",
+    "name": "Rexis-05",
+    "current_city": "Chicago, IL",
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "capacity_weight": 45000,
+    "capacity_deck": 53,
+    "used_weight": 0,
+    "used_deck": 0,
+    "status": "working"
+  }
+]

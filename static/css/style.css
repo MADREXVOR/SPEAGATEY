@@ -1,0 +1,409 @@
+:root {
+    --bg-body: #050608;
+    --bg-panel: #111827;
+    --bg-panel-soft: #0b1018;
+    --accent: #4f46e5;
+    --accent-soft: #6366f1;
+    --accent-danger: #ef4444;
+    --accent-good: #22c55e;
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --border-subtle: #1f2937;
+    --card-bg: #020617;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+}
+
+#app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: radial-gradient(circle at 0 0, #1d4ed8, #020617 60%);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-pill {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #f97316;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #111827;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-title {
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.brand-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.header-actions button {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.header-actions button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+#app-main {
+    display: flex;
+    height: calc(100vh - 48px);
+    overflow: hidden;
+}
+
+#map-column {
+    flex: 0 0 55%;
+    border-right: 1px solid var(--border-subtle);
+    background: #020617;
+    position: relative;
+    z-index: 0;
+}
+
+#map { width: 100%; height: 100%; }
+
+#info-column {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+    background: radial-gradient(circle at 100% 0, #0f172a, #020617 60%);
+}
+
+#boards-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    min-height: 40%;
+}
+
+#lower-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+}
+
+.panel {
+    background: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel h2 {
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+    background: linear-gradient(to right, #020617, #111827);
+}
+
+.board-list {
+    padding: 6px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.board-list.small {
+    font-size: 11px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid #1f2937;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.05s ease;
+}
+
+.card.vip { border-color: #f97316; }
+.card.open { border-color: #3b82f6; }
+.card.working { border-color: var(--accent-good); }
+
+.card.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px #6366f1;
+    transform: translateY(-1px);
+}
+
+.card strong { font-size: 12px; }
+
+.meta-line {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.truck-card {
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid #1f2937;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.truck-card.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px #6366f1;
+}
+
+.truck-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+.truck-header span:last-child {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.truck-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.truck-actions { text-align: right; }
+
+.truck-actions button {
+    background: #b91c1c;
+    border: none;
+    border-radius: 999px;
+    color: #fee2e2;
+    font-size: 10px;
+    padding: 2px 7px;
+    cursor: pointer;
+}
+
+.decision-line {
+    padding: 2px 0;
+    border-bottom: 1px dashed #111827;
+}
+.decision-line:last-child { border-bottom: none; }
+
+.route-card { border-color: var(--accent-good); }
+
+.route-actions {
+    margin-top: 4px;
+    text-align: right;
+}
+
+.route-actions .btn-assign-route {
+    background: var(--accent-good);
+    border: none;
+    color: #022c22;
+    padding: 3px 8px;
+    font-size: 11px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.route-actions .btn-assign-route:hover {
+    filter: brightness(1.05);
+}
+
+.board-list::-webkit-scrollbar { width: 6px; }
+.board-list::-webkit-scrollbar-track { background: transparent; }
+.board-list::-webkit-scrollbar-thumb {
+    background: #111827;
+    border-radius: 3px;
+}
+
+/* Modal */
+#detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;  /* ensure it sits above map + panels */
+}
+#detail-overlay.open { display: flex; }
+
+#detail-modal {
+    background: #020617;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    width: 340px;
+    max-width: 90vw;
+    padding: 10px 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+#detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+#detail-header button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#detail-body h3 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+#detail-body p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Scrollable load boards so they don't push the trucks off-screen */
+.board-list {
+    /* keep inside its card instead of stretching the whole page */
+    max-height: 260px;          /* tweak this number if you want more/less */
+    overflow-y: auto;
+    padding-right: 4px;         /* room for scrollbar */
+}
+
+/* Optional: same behavior for suggested routes & trucks if they share this class */
+#suggested-list.board-list,
+#truck-list.board-list,
+#decisions-list.board-list {
+    max-height: 280px;
+}
+/* --- Fix cut-off panels: make inner lists scrollable --- */
+
+/* Make the six main panels behave like columns with a header + scroll body */
+#vip-board,
+#open-board,
+#working-board,
+#live-stream,
+#trucks-panel,
+#decisions-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* required so flex children can shrink and scroll */
+}
+
+/* The actual list areas inside each panel */
+#vip-list,
+#open-list,
+#working-list,
+#suggested-list,
+#truck-list,
+#decisions-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;      /* <-- scroll inside panel instead of off-screen */
+    padding-right: 4px;    /* room for scrollbar */
+}
+
+/* Optional: keep the whole right side pinned to viewport height */
+#right-column {
+    height: calc(100vh - 60px); /* adjust if your top bar is taller/shorter */
+    min-height: 0;
+}
+
+/* ---- Right-hand column layout guards ---- */
+
+/* Make the whole main layout respect the viewport height */
+html, body {
+    height: 100%;
+}
+
+#layout-root,
+#app-root,
+body > .layout-root {
+    /* whichever wrapper you use around map + side panels */
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+/* Boards / lists should scroll instead of stretching everything */
+#vip-list,
+#open-list,
+#working-list {
+    /* top row = at most half the screen */
+    max-height: calc(50vh - 90px);  /* tweak the 90px if headers are taller/shorter */
+    overflow-y: auto;
+    padding-right: 4px;             /* avoid scrollbar over text */
+}
+
+/* bottom row: live suggestions + trucks + decisions */
+#suggested-list,
+#truck-list,
+#decisions-list {
+    max-height: calc(50vh - 90px);
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Make their parent panels behave nicely in flex layouts */
+.panel,
+.board,
+.truck-panel,
+.decisions-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;         /* critical so children can scroll instead of overflow */
+}
+
+.panel > *:last-child {
+    /* whatever the scrolling list is (vip-list, open-list, etc.)
+       can grow and scroll */
+    flex: 1 1 auto;
+    min-height: 0;
+}

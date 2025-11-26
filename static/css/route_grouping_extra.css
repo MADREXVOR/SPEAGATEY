@@ -1,0 +1,19 @@
+.route-group-header {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 6px 0 2px 2px;
+}
+
+.route-card .route-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.route-empty {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 6px;
+}
